@@ -8,7 +8,6 @@
 
 import UIKit
 //全局变量 定义本地运行时的数据库
-var todos: [TodoModel] = []
 func dateFromString(dateStr: String) -> NSDate? {
     let dateFormatter = NSDateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -16,12 +15,13 @@ func dateFromString(dateStr: String) -> NSDate? {
     return date
 }
 class ViewController: UIViewController , UITableViewDataSource , UITableViewDelegate{
+    static var todos:[TodoModel]?
 
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        todos = [
+        ViewController.todos = [
             TodoModel(id: "1", image: "selected-phone", title: "1.约她", date: dateFromString("2015-06-01")!),
             TodoModel(id: "2", image: "selected-child", title: "2.啪啪啪", date: dateFromString("2015-06-02")!),
             TodoModel(id: "3", image: "selected-plane", title: "3.跑路", date: dateFromString("2015-06-03")!),
@@ -31,6 +31,10 @@ class ViewController: UIViewController , UITableViewDataSource , UITableViewDele
 
         navigationItem.leftBarButtonItem = editButtonItem()
     }
+    override func viewDidAppear(animated: Bool) {
+        tableView.reloadData()
+    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -38,13 +42,13 @@ class ViewController: UIViewController , UITableViewDataSource , UITableViewDele
     }
     //屏幕显示几行
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        return todos.count
+        return ViewController.todos!.count
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //重用
         let cell = self.tableView.dequeueReusableCellWithIdentifier("todoCell")! as UITableViewCell
         let todo: TodoModel
-        todo = todos[indexPath.row] as TodoModel
+        todo = ViewController.todos![indexPath.row] as TodoModel
         let image = cell.viewWithTag(101) as! UIImageView
         let title = cell.viewWithTag(102) as! UILabel
         let date = cell.viewWithTag(103) as! UILabel
@@ -62,7 +66,7 @@ class ViewController: UIViewController , UITableViewDataSource , UITableViewDele
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == UITableViewCellEditingStyle.Delete {
-            todos.removeAtIndex(indexPath.row)
+            ViewController.todos!.removeAtIndex(indexPath.row)
             //删除的动画
             self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
         }

@@ -79,16 +79,17 @@ class DetailViewController: UIViewController ,UITextFieldDelegate{
         }
         if todo == nil {
             let uuid = NSUUID().UUIDString
-            let todo = TodoModel(id: uuid, image: image, title: todoItem.text!, date: todoDate.date)
-            todos.append(todo)
-        }
-        else {
+           
+            todo = TodoModel(id: uuid, image: image, title: todoItem.text!,
+                date: todoDate.date)
+            ViewController.todos!.append(todo!)
+            
+
+        }else {
             todo?.image = image
             todo?.title = todoItem.text!
             todo?.date = todoDate.date
         }
-
-
     }
     //按return键盘消失
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -101,4 +102,6 @@ class DetailViewController: UIViewController ,UITextFieldDelegate{
     }
 
     
+
 }
+
