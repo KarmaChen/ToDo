@@ -17,7 +17,6 @@ class DetailViewController: UIViewController ,UITextFieldDelegate{
     @IBOutlet weak var todoDate: UIDatePicker!
     //有可能为空 所以定义成一个optional
     var todo : TodoModel?
-
     override func viewDidLoad() {
         super.viewDidLoad()
         todoItem.delegate = self
@@ -53,6 +52,7 @@ class DetailViewController: UIViewController ,UITextFieldDelegate{
         shoppingCartButton.selected = true
     }
     @IBAction func okTapped(sender: AnyObject) {
+        
 //        var image = ""
 //        if childButton.selected{
 //            image = "child-selected"
@@ -79,16 +79,16 @@ class DetailViewController: UIViewController ,UITextFieldDelegate{
         }
         if todo == nil {
             let uuid = NSUUID().UUIDString
-            let todo = TodoModel(id: uuid, image: image, title: todoItem.text!, date: todoDate.date)
-            todos.append(todo)
+            todo = TodoModel(id: uuid, image: image, title: todoItem.text!, date: todoDate.date)
+            ViewController.todos!.append(todo!)
+            
         }
         else {
             todo?.image = image
             todo?.title = todoItem.text!
             todo?.date = todoDate.date
         }
-
-
+        
     }
     //按return键盘消失
     func textFieldShouldReturn(textField: UITextField) -> Bool {
