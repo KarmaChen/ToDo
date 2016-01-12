@@ -8,13 +8,15 @@
 
 import UIKit
 //全局变量 定义本地运行时的数据库
+var filteredTodos: [TodoModel] = []
+
 func dateFromString(dateStr: String) -> NSDate? {
     let dateFormatter = NSDateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd"
     let date = dateFormatter.dateFromString(dateStr)
     return date
 }
-class ViewController: UIViewController , UITableViewDataSource , UITableViewDelegate{
+class ViewController: UIViewController , UITableViewDataSource , UITableViewDelegate,UISearchDisplayDelegate{
     static var todos:[TodoModel]?
 
     @IBOutlet weak var tableView: UITableView!
@@ -30,25 +32,33 @@ class ViewController: UIViewController , UITableViewDataSource , UITableViewDele
         ]
 
         navigationItem.leftBarButtonItem = editButtonItem()
-    }
-    override func viewDidAppear(animated: Bool) {
-        tableView.reloadData()
-    }
+        var contentOffset = tableView.contentOffset
+        contentOffset.y += (searchDisplayController?.searchBar.frame.size.height)!
+        tableView.contentOffset = contentOffset
 
-
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     //屏幕显示几行
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        return ViewController.todos!.count
+        if tableView == searchDisplayController?.searchResultsTableView {
+            return filteredTodos.count
+        } else {
+            return ViewController.todos!.count
+        }
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //重用
         let cell = self.tableView.dequeueReusableCellWithIdentifier("todoCell")! as UITableViewCell
-        let todo: TodoModel
-        todo = ViewController.todos![indexPath.row] as TodoModel
+        var todo: TodoModel
+        if tableView == searchDisplayController?.searchResultsTableView {
+            todo = filteredTodos[indexPath.row] as TodoModel
+        } else {
+            todo = ViewController.todos![indexPath.row]
+        }
+
         let image = cell.viewWithTag(101) as! UIImageView
         let title = cell.viewWithTag(102) as! UILabel
         let date = cell.viewWithTag(103) as! UILabel
@@ -76,6 +86,31 @@ class ViewController: UIViewController , UITableViewDataSource , UITableViewDele
         super.setEditing(editing, animated: animated)
         self.tableView.setEditing(editing, animated: animated)
     }
+    @IBAction func close(segue: UIStoryboardSegue) {
+        print("closed")
+        tableView.reloadData()
+    }
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "EditTodo" {
+            let vc = segue.destinationViewController as! DetailViewController
+            let indexPath = tableView.indexPathForSelectedRow
+            //if let  判断是否为空
+            if let index = indexPath {
+                vc.todo = ViewController.todos![index.row]
+            }
+        }
+    }
+    //查找
+    func searchDisplayController(controller: UISearchDisplayController, shouldReloadTableForSearchString searchString: String?) -> Bool {
+        filteredTodos = ViewController.todos!.filter(){ $0.title.rangeOfString(searchString!) != nil }
+        
+        return true
+    }
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 80
+    }
+
+
 
 }
 

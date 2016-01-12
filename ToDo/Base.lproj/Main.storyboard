@@ -20,9 +20,17 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="f6W-wE-GI0">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <searchBar key="tableHeaderView" contentMode="redraw" id="rXm-Zl-L42">
+                                    <rect key="frame" x="0.0" y="64" width="320" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="BYZ-38-t0r" id="sOx-sh-95s"/>
+                                    </connections>
+                                </searchBar>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="todoCell" rowHeight="80" id="zXf-Pf-z8Q">
-                                        <rect key="frame" x="0.0" y="92" width="320" height="80"/>
+                                        <rect key="frame" x="0.0" y="136" width="320" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zXf-Pf-z8Q" id="YeH-Eq-Oxr">
                                             <rect key="frame" x="0.0" y="0.0" width="287" height="79.5"/>
@@ -65,10 +73,20 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="searchDisplayController" destination="7yN-UO-orW" id="ktj-Nm-XCx"/>
                         <outlet property="tableView" destination="f6W-wE-GI0" id="6U3-l5-n7V"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="7yN-UO-orW">
+                    <connections>
+                        <outlet property="delegate" destination="BYZ-38-t0r" id="6fc-gW-hQ5"/>
+                        <outlet property="searchBar" destination="rXm-Zl-L42" id="IUl-QY-Sr9"/>
+                        <outlet property="searchContentsController" destination="BYZ-38-t0r" id="Tjo-MD-rIJ"/>
+                        <outlet property="searchResultsDataSource" destination="BYZ-38-t0r" id="U6J-I0-LJO"/>
+                        <outlet property="searchResultsDelegate" destination="BYZ-38-t0r" id="Ejl-Ji-RC5"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="881" y="311"/>
         </scene>
@@ -138,6 +156,7 @@
                                 <state key="normal" title="确定"/>
                                 <connections>
                                     <action selector="okTapped:" destination="3rd-Hr-Dxd" eventType="touchUpInside" id="Fcr-CJ-vBN"/>
+                                    <segue destination="lcV-Or-3Au" kind="unwind" unwindAction="close:" id="zfR-hC-dtO"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -154,6 +173,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ugJ-JP-yNy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="lcV-Or-3Au" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1259" y="311"/>
         </scene>
@@ -187,6 +207,6 @@
         <image name="shopping-cart" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="5ep-2l-evd"/>
+        <segue reference="tiQ-TT-eUp"/>
     </inferredMetricsTieBreakers>
 </document>

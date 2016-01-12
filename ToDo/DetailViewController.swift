@@ -17,10 +17,33 @@ class DetailViewController: UIViewController ,UITextFieldDelegate{
     @IBOutlet weak var todoDate: UIDatePicker!
     //有可能为空 所以定义成一个optional
     var todo : TodoModel?
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         todoItem.delegate = self
+        if todo == nil {
+            navigationItem.title = "Add"
+            print("todo to edit is nil")
+        }
+        else {
+            navigationItem.title = "Edit"
+            let selectedImage = todo?.image
+            switch selectedImage! {
+            case "selected-child":
+                childButton.selected = true
+            case "selected-phone":
+                phoneButton.selected = true
+            case "selected-plane":
+                travelButton.selected = true
+            case "selected-shopping-cart":
+                shoppingCartButton.selected = true
+            default: break
+            }
+            todoItem.text = todo?.title
+            todoDate.setDate((todo?.date)!, animated: false)
+        }
+
 
         // Do any additional setup after loading the view.
     }
@@ -76,7 +99,18 @@ class DetailViewController: UIViewController ,UITextFieldDelegate{
         var image = ""
         if "" == image {
             image = "selected-child"
+        }else if travelButton.selected{
+            image = "travel-selected"
         }
+            
+        else if phoneButton.selected{
+            image = "phone-selected"
+        }
+            
+        else if shoppingCartButton.selected{
+            image = "shoppingCart-selected"
+        }
+
         if todo == nil {
             let uuid = NSUUID().UUIDString
            
@@ -100,6 +134,16 @@ class DetailViewController: UIViewController ,UITextFieldDelegate{
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         todoItem.resignFirstResponder()
     }
+    func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return editing
+    }
+    
+    func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+        let todo = ViewController.todos!.removeAtIndex(sourceIndexPath.row)
+        ViewController.todos!.insert(todo, atIndex: destinationIndexPath.row)
+    }
+
+    
 
     
 
